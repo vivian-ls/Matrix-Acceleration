@@ -8,21 +8,20 @@ void solve() {
     int n, m, num_cnt;
     ifstream fin("data.txt");
     fin >> n >> m >> num_cnt;
-    vector<vector<double>> vec(n + 1, vector<double>(m + 1));
+    vector<vector<int>> vec(n + 1, vector<int>(m + 1));
     int u, v;
-    double w;
     fore(i, 0, num_cnt) {
-        fin >> u >> v >> w;
-        vec[u][v] = w;
+        fin >> u >> v;
+        vec[u][v] = rand() % 100;
     }
     auto start = chrono::high_resolution_clock::now();
     vector<int> x(n, 1), y(n, 0);
 
     #pragma omp parallel for schedule(dynamic)
-    for (int i = 0; i < n; ++i) {
-        double local_y = 0;
+    for (int i = 0; i < n; i++) {
+        int local_y = 0;
         for (int j = 0; j < m; ++j) {
-            y[i] += vec[i][j] * x[j];
+            local_y += vec[i][j] * x[j];
         }
         y[i] = local_y;
     }
@@ -36,6 +35,7 @@ void solve() {
 }
     
 int main() {
+    srand(time(0));
     ios::sync_with_stdio(false);
     cin.tie(0), cout.tie(0);
     solve();
